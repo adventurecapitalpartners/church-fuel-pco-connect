@@ -11,21 +11,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            background-color: #f5f5f5;
+            background-color: #f7f8fa;
+            padding: 20px;
         }
         .container {
             text-align: center;
             background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 48px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
             max-width: 500px;
+            width: 100%;
         }
-        h1 { color: #333; }
-        p { color: #666; margin: 20px 0; }
-        #pd-connect-container { margin-top: 30px; }
+        h1 { 
+            color: #1a1a1a; 
+            margin-bottom: 16px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        p { 
+            color: #6b7280; 
+            margin: 0 0 32px 0;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -36,24 +46,29 @@
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const locationId = urlParams.get('locationId') || 'test';
-        const locationName = urlParams.get('locationName') || 'Your Church';
-        
-        document.getElementById('churchName').textContent = locationName;
-        
-        const pd = PipedreamConnect.init({
-            clientId: '7ofRpT48JOxpSAmC8w1HCcuqhQbN0RjJniPaTeXMwV0',
-            environment: 'production',
-            container: '#pd-connect-container'
-        });
-        
-        pd.connectAccount({
-            app: 'planning-center',
-            externalUserId: `ghl_${locationId}_${Date.now()}`,
-            webhookUrl: 'https://eozld6nnmbsoof3.m.pipedream.net', // <-- UPDATE THIS
-            successRedirectUri: window.location.origin + '/success.html',
-            errorRedirectUri: window.location.origin + '/error.html'
+        // Wait for the page to fully load
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const locationId = urlParams.get('locationId') || 'test123';
+            const locationName = urlParams.get('locationName') || 'Your Church';
+            
+            document.getElementById('churchName').textContent = locationName;
+            
+            // Initialize Pipedream Connect
+            const pd = window.PipedreamConnect.init({
+                clientId: '7ofRpT48JOxpSAmC8w1HCcuqhQbN0RjJniPaTeXMwV0',
+                environment: 'production',
+                container: '#pd-connect-container'
+            });
+            
+            // Connect to Planning Center
+            pd.connectAccount({
+                app: 'planning-center',
+                externalUserId: 'ghl_' + locationId + '_' + Date.now(),
+                webhookUrl: 'https://eozld6mnmbsoof.m.pipedream.net/', // Make sure this is YOUR webhook URL
+                successRedirectUri: window.location.origin + '/success.html',
+                errorRedirectUri: window.location.origin + '/error.html'
+            });
         });
     </script>
 </body>
