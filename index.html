@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Planning Center - Church Fuel</title>
+    <script src="https://js.pipedream.com/connect/v2"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+        }
+        h1 { color: #333; }
+        p { color: #666; margin: 20px 0; }
+        #pd-connect-container { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Connect Planning Center</h1>
+        <p id="churchName">Loading...</p>
+        <div id="pd-connect-container"></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationId = urlParams.get('locationId') || 'test';
+        const locationName = urlParams.get('locationName') || 'Your Church';
+        
+        document.getElementById('churchName').textContent = locationName;
+        
+        const pd = PipedreamConnect.init({
+            clientId: '7ofRpT48JOxpSAmC8w1HCcuqhQbN0RjJniPaTeXMwV0',
+            environment: 'production',
+            container: '#pd-connect-container'
+        });
+        
+        pd.connectAccount({
+            app: 'planning-center',
+            externalUserId: `ghl_${locationId}_${Date.now()}`,
+            webhookUrl: 'https://eozld6nnmbsoof3.m.pipedream.net', // <-- UPDATE THIS
+            successRedirectUri: window.location.origin + '/success.html',
+            errorRedirectUri: window.location.origin + '/error.html'
+        });
+    </script>
+</body>
+</html>
